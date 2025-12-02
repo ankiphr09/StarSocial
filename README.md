@@ -200,3 +200,5 @@ If you'd like, I can also:
 - Add GitHub Actions to run tests and optionally apply migrations before deploy.
 
 Tell me if you want me to create a `render.yaml`, prepare CI steps, or deploy the app on Render and help verify the first run.
+
+working link : https://starsocial-1.onrender.com/
