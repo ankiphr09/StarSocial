@@ -153,3 +153,50 @@ If you want, I can also:
 - Add automated migration/deploy steps in CI (GitHub Actions)
 
 Pick one and I'll implement it next.
+
+-----
+
+## Deployment (Render)
+
+This repository can be deployed on Render (recommended for full Django apps). Render runs services from Git and has first-class support for Python web services. The repository already contains the code required to run in a container, and this guide describes a minimal Render setup.
+
+Quick steps to deploy on Render (web UI):
+
+1. Sign in to https://render.com and create a new **Web Service**.
+2. Connect your GitHub account and select the `ankiphr09/StarSocial` repository.
+3. Choose the branch `master` and set the runtime to `Python 3`.
+4. Set Environment Variables in Render (Service → Environment):
+	- `DEBUG` = `False`
+	- `ALLOWED_HOSTS` = your Render URL (e.g. `your-service.onrender.com`) or `*` for testing
+	- `SECRET_KEY` = a secure random string
+	- (Optional) `DATABASE_URL` = Postgres URL if you want production DB (recommended)
+5. Use the following **Start Command** (Render will run `pip install -r requirements.txt` during build):
+
+```bash
+bash -lc "python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn simplesocial.wsgi:application --bind 0.0.0.0:$PORT"
+```
+
+6. Click **Create Web Service** — Render will build and deploy. Check the build logs for `migrate` and `collectstatic` output and the final Gunicorn startup log.
+
+Notes and best practices for Render:
+- Use a managed Postgres database in production. Set `DATABASE_URL` in Render environment variables and update `simplesocial/settings.py` accordingly if you want to switch from SQLite.
+- Running migrations during startup is convenient for small apps. For production teams, prefer running migrations via CI or a separate admin job before switching traffic.
+- Make sure `SECRET_KEY` and `DEBUG=False` are set in Render environment to avoid leaking secrets and exposing debug pages.
+
+Procfile alternative (optional)
+
+If you prefer a `Procfile` (supported by some platforms), add a file named `Procfile` with:
+
+```
+web: bash -lc "python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn simplesocial.wsgi:application --bind 0.0.0.0:$PORT"
+```
+
+I added a `Procfile` to the repo to make Render/other hosts easier to configure.
+
+-----
+
+If you'd like, I can also:
+- Add a `render.yaml` manifest for fully automated Render setup (I can generate the file and commit it).
+- Add GitHub Actions to run tests and optionally apply migrations before deploy.
+
+Tell me if you want me to create a `render.yaml`, prepare CI steps, or deploy the app on Render and help verify the first run.
