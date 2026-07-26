@@ -1,6 +1,6 @@
 asgiref==3.11.0
 Django==5.2.9
-django-bootstrap3==2.25.3
+django-bootstrap3==25.3
 django-braces==1.17.0
 gunicorn==23.0.0
-whitenoise==7.0.1
+whitenoise==6.12.0
