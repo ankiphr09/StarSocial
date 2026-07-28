@@ -1,5 +1,5 @@
 asgiref==3.11.0
-Django==5.2.9
+Django==5.2.15
 django-bootstrap3==25.3
 django-braces==1.17.0
 gunicorn==23.0.0
